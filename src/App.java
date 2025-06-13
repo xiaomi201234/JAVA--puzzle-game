@@ -10,5 +10,6 @@ public class App {
         new LoginJFrame();
         //new RegisterJFrame();
         //new GameJFrame();
+
     }
 }

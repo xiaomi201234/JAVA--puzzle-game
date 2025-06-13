@@ -1,5 +1,6 @@
 package com.puzzle.domain;
 
+
 public class User {
     private String username;
     private String password;
@@ -26,5 +27,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return  "username="+username+"&passwords="+password;
     }
 }

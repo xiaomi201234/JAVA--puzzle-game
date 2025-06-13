@@ -1,4 +1,5 @@
 package com.puzzle.ui;
+import cn.hutool.core.io.FileUtil;
 import com.puzzle.domain.User;
 import  com.puzzle.util.*;
 import javax.swing.*;
@@ -6,15 +7,13 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
 //user login frame
 
 public class LoginJFrame extends JFrame implements MouseListener {
 
-    static ArrayList<User> userlist=new ArrayList<>();
-    static {
-        userlist.add(new User("beck","beck123"));
-        userlist.add(new User("Jack","Jack234"));
-    }
+    ArrayList<User> userlist=new ArrayList<>();
+
 
     JTextField usertext=new JTextField();
     JPasswordField passtext=new JPasswordField();
@@ -26,12 +25,29 @@ public class LoginJFrame extends JFrame implements MouseListener {
 
 
     public LoginJFrame(){
+        //read user info in the local file
+        readuserinfo();
+
         //when build the login frame,show the frame
         initFrame();
         initblank();
 
         this.setVisible(true);
     }
+
+    private void readuserinfo() {
+        List<String> userinfolist= FileUtil.readUtf8Lines("D:\\多伦多\\Java\\Puzzle game\\userinfo.txt");
+        for (String str : userinfolist) {
+            String[] userarr = str.split("&");
+            String[] arr1 = userarr[0].split("=");
+            String[] arr2 = userarr[1].split("=");
+
+            User u =new User(arr1[1],arr2[1]);
+            userlist.add(u);
+
+        }
+    }
+
     private void initFrame(){
         this.setSize(490,430);
         this.setTitle("Beck Puzzle Game-- Login");
@@ -153,7 +169,7 @@ public class LoginJFrame extends JFrame implements MouseListener {
 
         } else if (e.getSource()==register) {
             this.setVisible(false);
-            new RegisterJFrame();
+            new RegisterJFrame(userlist);
 
         } else if (e.getSource()==rightcode) {
             String code=getCode.verifycode();
@@ -165,7 +181,7 @@ public class LoginJFrame extends JFrame implements MouseListener {
         }
     }
 
-    public static boolean finduser(User input){
+    public  boolean finduser(User input){
         for (int i = 0; i < userlist.size(); i++) {
             User right=userlist.get(i);
             if(input.getUsername().equals(right.getUsername()) && input.getPassword().equals(right.getPassword())){
